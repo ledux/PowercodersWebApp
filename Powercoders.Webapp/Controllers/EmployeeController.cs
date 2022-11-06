@@ -48,17 +48,48 @@ public class EmployeeController : Controller
     }
 
 
-    public IActionResult Edit(string employeeId)
+    [HttpGet]
+    public IActionResult Edit(uint id)
+    {
+        var employee = EmployeeRepository.SingleOrDefault(e => e.Id == id);
+        if (employee is null)
+        {
+            return View("Error", new ErrorViewModel());
+        }
+
+        return View(employee);
+    }
+    
+    [HttpPost]
+    public IActionResult Edit(Employee employee)
+    {
+        var employeeEmail = $"{employee.Firstname.ToLower()}.{employee.Lastname.ToLower()}@example.com";
+        if (EmailRepository.Contains(employeeEmail))
+        {
+            return View("Error", new ErrorViewModel());
+        }
+
+        var employeeToUpdate = EmployeeRepository.SingleOrDefault(e => e.Id == employee.Id);
+        if (employeeToUpdate is not null)
+        {
+            EmployeeRepository.Remove(employeeToUpdate);
+            EmailRepository.Remove(employeeToUpdate.Email);
+        }
+
+        var updatedEmployee = employee with { Email = employeeEmail };
+        
+        EmailRepository.Add(employeeEmail);
+        EmployeeRepository.Add(updatedEmployee);
+        
+        return RedirectToAction("Index");
+    }
+
+    public IActionResult Details(uint employeeId)
     {
         throw new NotImplementedException();
     }
 
-    public IActionResult Details(string employeeId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IActionResult Delete(string employeeId)
+    public IActionResult Delete(uint employeeId)
     {
         throw new NotImplementedException();
     }
