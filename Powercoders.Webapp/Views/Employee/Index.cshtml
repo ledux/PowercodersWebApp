@@ -4,6 +4,10 @@
     ViewData["Title"] = "Employees";
 }
 
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
 <table class="table">
     <thead>
     <tr>
@@ -16,6 +20,7 @@
         <th>
             @Html.DisplayNameFor(model => model.Email)
         </th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -31,6 +36,11 @@
             <td>
                 @Html.DisplayFor(_ => employee.Email)
             </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@employee.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@employee.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@employee.Id">Delete</a>
+                </td>
         </tr>
     }
     </tbody>
